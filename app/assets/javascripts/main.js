@@ -45,7 +45,7 @@ function deleteQuote(e){
     method: 'delete'
   }).done(function(){
     console.log(arguments);
-    $(e.target).parent().remove();
+    $(e.target).closest('.row').remove();
   })
 }
 
@@ -63,7 +63,7 @@ function updateQuote(e){
     data: data
   }).done(function(){
     console.log(arguments);
-    var $success = $('<h4>').text('Success!')
+    var $success = $('<h4>').text('Quote updated!')
     $('#page-container').append($success)
   })
 }
@@ -78,8 +78,8 @@ function buildListCard(quote) {
        <p>By: ${quote.author}</p>
       </div>
       <div class="card-action">
-        <button class="update btn-small waves-effect waves-light orange" data-url="/quotes/${quote.id}/edit">Update quote</button>
-        <button class="delete btn-small waves-effect waves-light orange" data-url="/quotes/${quote.id}">Delete quote</button>
+        <button class="update btn waves-effect waves-light orange" data-url="/quotes/${quote.id}/edit">Update quote</button>
+        <button class="delete btn waves-effect waves-light orange" data-url="/quotes/${quote.id}">Delete quote</button>
       </div>
     </div>
   </div>
@@ -97,7 +97,7 @@ function buildResultCard(quote, author) {
        <p>By: ${author}</p>
       </div>
       <div class="card-action">
-        <button class="btn-small waves-effect waves-light orange" id="save-quote" data-quote="${quote}" data-author="${author}">Save Quote</a>
+        <button class="btn waves-effect waves-light orange" id="save-quote" data-quote="${quote}" data-author="${author}">Save Quote</a>
       </div>
     </div>
   </div>
@@ -174,8 +174,8 @@ function renderQuoteUpdateForm(e){
     let $form = $(`<form data-url="${data.url}">`);
     let $quote = $(`<textarea name="quote_text" placeholder="Quote">`).text(data.data.quote_text);
     let $author = $(`<input type="text" name="author" value="${data.data.author}">`);
-    let $submit = $('<input class="btn-small waves-effect waves-light orange" type="submit" value="UPDATE">');
-    let $back = $('<button class="btn-small waves-effect waves-light orange" data-url="/quotes">Back to Quotes</button>')
+    let $submit = $('<input class="btn waves-effect waves-light orange" type="submit" value="UPDATE">');
+    let $back = $('<button class="btn waves-effect waves-light orange top-space" data-url="/quotes">Back to Quotes</button>')
     $('#page-container').append($form.append($quote,$author,$submit),$back);
 
     $form.submit(updateQuote);
