@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 
   #get 'random_quotes#index'
   resources :random_quotes, only: [:index]
+  resources :quotes
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
