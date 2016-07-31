@@ -8,7 +8,25 @@
     <%= javascript_include_tag 'application' %>
   </head>
 
-  <body>
+<body>
+  <header>
+    <div class="logo"></div>
+    <div class="header">
+    <h1>inspirational Guide</h1>  
+      <nav class="main">
+        <ul>
+          <li>
+            <button class="empty">Home</button>
+          </li>
+          <li>
+            <button class="redirect" data-url="/quotes">Quotes</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <section class="content">
     <%= yield %>
-  </body>
+  </section>
+</body>
 </html>
