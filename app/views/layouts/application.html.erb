@@ -3,29 +3,31 @@
   <head>
     <title>Inspiration</title>
     <%= csrf_meta_tags %>
-
+    
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <%= stylesheet_link_tag    'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
   </head>
 
 <body>
   <header>
-    <div class="logo"></div>
     <div class="header">
-    <h1>Inspirational Guide for the Soul</h1>  
-      <nav class="main">
-        <ul>
-          <li>
-            <button class="redirect">Home</button>
-          </li>
-          <li>
-            <button class="redirect" data-url="/quotes">Quotes</a>
-          </li>
-        </ul>
+      <nav class="light-blue lighten-1" role="navigation">
+        <div class="main nav-wrapper container">
+          <a id="logo-container" href="#" class="brand-logo">Inspirational Guide for the Soul</a>
+          <ul class="right">
+            <li>
+              <a class="redirect">Home</a>
+            </li>
+            <li>
+              <a class="redirect" data-url="/quotes">Quotes</a>
+            </li>
+          </ul>
+        </div>
       </nav>
     </div>
   </header>
-  <section class="content">
+  <section class="container"> 
     <%= yield %>
   </section>
 </body>

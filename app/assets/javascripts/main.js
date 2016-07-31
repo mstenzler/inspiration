@@ -1,9 +1,7 @@
 $(document).ready(function(){
 
-let houses = ["Gryffindor","Slytherin","Hufflepuff","Ravenclaw"];
-
 function emptyContainer(){
-  $('#container').empty();
+  $('#page-container').empty();
 }
 
 $('.empty').click(emptyContainer);
@@ -66,18 +64,55 @@ function updateQuote(e){
   }).done(function(){
     console.log(arguments);
     var $success = $('<h4>').text('Success!')
-    $('#container').append($success)
+    $('#page-container').append($success)
   })
+}
+
+function buildListCard(quote) {
+  var $d = $(`<div class="row">
+  <div class="col s12">
+    <div class="card blue-grey darken-1">
+      <div class="card-content white-text">
+       <p>${quote.quote_text}</p>
+       <br />
+       <p>By: ${quote.author}</p>
+      </div>
+      <div class="card-action">
+        <button class="update btn-small waves-effect waves-light orange" data-url="/quotes/${quote.id}/edit">Update quote</button>
+        <button class="delete btn-small waves-effect waves-light orange" data-url="/quotes/${quote.id}">Delete quote</button>
+      </div>
+    </div>
+  </div>
+</div>`);
+  return $d;
+}
+
+function buildResultCard(quote, author) {
+  var $d = $(`<div class="row">
+  <div class="col s12">
+    <div class="card blue-grey darken-1">
+      <div class="card-content white-text">
+       <p>${quote}</p>
+       <br />
+       <p>By: ${author}</p>
+      </div>
+      <div class="card-action">
+        <button class="btn-small waves-effect waves-light orange" id="save-quote" data-quote="${quote}" data-author="${author}">Save Quote</a>
+      </div>
+    </div>
+  </div>
+</div>`);
+  return $d;
 }
 
 function renderQuote(data) {
   var quoteText = data.quoteText;
   var quoteAuthor = data.quoteAuthor;
-  var $quote = $(`<h3>`).text(quoteText);
-  var $author = $(`<h4>`).text(` by ${quoteAuthor}`);
-  var $savebutton = $(`<button id="save-quote" data-quote="${quoteText}" data-author="${quoteAuthor}">`).text("Save Quote");
 
-  $('#current-quote').append($quote,$author, $savebutton);
+  var $myQuote = buildResultCard(quoteText, quoteAuthor);
+//  console.log($myQuote);
+//  $('#current-quote').append($quote,$author, $saveButton);
+  $('#current-quote').append($myQuote);
   $('#save-quote').click(saveQuote);
 }
 
@@ -88,7 +123,10 @@ function renderBadQuote() {
 
 function getQuote(e){
   $('#current-quote').empty();
-  $('#current-quote').append($('<img src="http://www.arabianbusiness.com/skins/ab.main/gfx/loading_spinner.gif">'))
+  var $spinner = $(`<div class="row center">
+    <img class="center" src="http://www.arabianbusiness.com/skins/ab.main/gfx/loading_spinner.gif">
+    </div>`);
+  $('#current-quote').append($spinner);
   var url = $(e.target).attr('data-url');
   console.log("Getting data from url: ", url);
   $.get(url).done(function(data){
@@ -107,23 +145,26 @@ function getQuote(e){
   });
 }
 
+
 function renderStart() {
-  var $instructions = $(`<h2>`).text("Hold a problem in your mind, click the button below and there will be your answer")
-  var $button = $(`<button id="get-quote" data-url="/random_quotes">`).text("Get Answer");
+  var $welcome = $(`<h1 class="header center orange-text">`).text("Welcome!");
+  var $instructionsDiv = $(`<div class="row center">`);
+  var $instructions = $(`<h5 class="header col a12 light">`).text("Hold a problem in your mind, click the button below and there will be your answer");
+  var $buttonDiv = $(`<div class="row center">`);
+  var $button = $(`<button id="get-quote" class="btn-large waves-effect waves-light orange" data-url="/random_quotes">`).text("Get Answer");
   var $quoteDiv = $(`<div id="current-quote">`);
-  $('#container').empty();
-  $('#container').append($instructions, $button, $quoteDiv);
+  //$('#container').empty();
+  emptyContainer();
+  $instructionsDiv.append($instructions);
+  $buttonDiv.append($button);
+  $('#page-container').append($welcome, $instructionsDiv, $buttonDiv, $quoteDiv);
   $('#get-quote').click(getQuote)
 
 }
 
 function appendQuote(quote){
-  var $quote = $('<h4>').text(quote.quote_text);
-  var $author = $('<h5>').text(quote.author);
-  var $update = $(`<button class="update">Update quote</button>`).attr('data-url',`/quotes/${quote.id}/edit`)
-  var $delete = $(`<button class="delete">Delete quote</button>`).attr('data-url',`/quotes/${quote.id}`)
-  var $div = $('<div>')
-  $('#container').append($div.append($quote,$author,$update,$delete));
+  var $quoteCard = buildListCard(quote);
+  $('#page-container').append($quoteCard);
 }
 
 function renderQuoteUpdateForm(e){
@@ -133,9 +174,9 @@ function renderQuoteUpdateForm(e){
     let $form = $(`<form data-url="${data.url}">`);
     let $quote = $(`<textarea name="quote_text" placeholder="Quote">`).text(data.data.quote_text);
     let $author = $(`<input type="text" name="author" value="${data.data.author}">`);
-    let $submit = $('<input type="submit" value="UPDATE">');
-    let $back = $('<button data-url="/quotes">Back to Quotes</button>')
-    $('#container').append($form.append($quote,$author,$submit),$back);
+    let $submit = $('<input class="btn-small waves-effect waves-light orange" type="submit" value="UPDATE">');
+    let $back = $('<button class="btn-small waves-effect waves-light orange" data-url="/quotes">Back to Quotes</button>')
+    $('#page-container').append($form.append($quote,$author,$submit),$back);
 
     $form.submit(updateQuote);
     $back.click(listQuotes);
@@ -146,6 +187,8 @@ function listQuotes(e){
   getData(e).done(function(data){
     emptyContainer();
     //renderNewQuoteForm();
+    var $header = $(`<h1 class="header center orange-text">`).text("Saved Quotes");
+    $('#page-container').append($header);
     data.forEach(appendQuote);
     $('.update').click(renderQuoteUpdateForm);
     $('.delete').click(deleteQuote);
